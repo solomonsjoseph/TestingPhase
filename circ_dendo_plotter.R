@@ -8,9 +8,9 @@ library(ape)
 circ_dendo_plotter <- function(se, assay_choice, batch, conditions) {
 
     # Get data out of object
-    input_dat <- assay(se_object, assay_choice)
-    batch_dat <- colData(se_object)[, colnames(colData(se_object))==batch]
-    col_data <- colData(se_object)[, colnames(colData(se_object)) %in% conditions]
+    input_dat <- assay(se, assay_choice)
+    batch_dat <- colData(se)[, col_data_nam %in% "batch"]
+    col_data <- colData(se)[, col_data_nam %in% "condition"]
 
     # Calculate distance matrix
     dist_mat <- dist(input_dat)
@@ -36,10 +36,23 @@ circ_dendo_plotter <- function(se, assay_choice, batch, conditions) {
 }
 
 #Se object
-se <- load("~/tmp/Projects/BatchQC/data/signature_data.rda")
+se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
+
+#####################################
+
+#To display Batch and condition separately
+col_data_nam <- colnames(colData(se))
+
+#Display assay name
+assay_nam <- assayNames(se)
+
+#Displays assay lenth (or) list of assay
+assays(se)
+
+#####################################
 
 # Define your assay_choice, batch, and conditions
-assay_choice <- "assay1"  # Replace with your assay choice
+assay_choice <- assayNames(se)  # Replace with your assay choice
 batch <- "batch1"  # Replace with your batch name
 conditions <- c("condition1", "condition2")  # Replace with your conditions
 

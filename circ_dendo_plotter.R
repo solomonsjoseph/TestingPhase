@@ -44,9 +44,9 @@ se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
 col_data_nam <- colnames(colData(se))
 
 #Display assay name
-assay_nam <- assayNames(se)
+assay_choice <- assayNames(se)
 
-#Displays assay lenth (or) list of assay
+#Displays assay length (or) list of assay
 assays(se)
 
 #####################################
@@ -57,4 +57,4 @@ batch <- "batch1"  # Replace with your batch name
 conditions <- c("condition1", "condition2")  # Replace with your conditions
 
 # Using the function
-#circ_dendo_plotter(se, assay_choice, batch, conditions)
+circ_dendo_plotter(se, assay_choice, batch, conditions)

@@ -49,12 +49,36 @@ assay_choice <- assayNames(se)
 #Displays assay length (or) list of assay
 assays(se)
 
+##########################
+
+# Initialize an empty list
+batch_dat_list <- list()
+
+# Loop over unique elements
+for(i in unique(batch_dat)) {
+  # Create a new list element for each unique element in col_data
+  batch_dat_list[[paste0("batch_dat", i)]] <- batch_dat[batch_dat == i]
+}
+
+###########################
+
+# Initialize an empty list
+col_data_list <- list()
+
+# Loop over unique elements
+for(i in unique(col_data)) {
+  # Create a new list element for each unique element in col_data
+  col_data_list[[paste0("col_data", i)]] <- col_data[col_data == i]
+}
+
+###########################
+
 #####################################
 
 # Define your assay_choice, batch, and conditions
 assay_choice <- assayNames(se)  # Replace with your assay choice
-batch <- "batch1"  # Replace with your batch name
-conditions <- c("condition1", "condition2")  # Replace with your conditions
+batch <- batch_dat_list # Replace with your batch name
+conditions <- col_data_list # Replace with your conditions
 
 # Using the function
 circ_dendo_plotter(se, assay_choice, batch, conditions)

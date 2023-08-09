@@ -18,7 +18,7 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
   color_count <- length(unique(unique_vars$.))
   get_palette <- grDevices::colorRampPalette(brewer.pal(
     n = length(unique(dendrogram_ends[,annotation_column])),
-    name = "Paired"))
+    name = "glasbay"))
   palette <- get_palette(color_count) %>% as.data.frame() %>%
     rename("color" = ".") %>%
     rownames_to_column(var = "row_id")

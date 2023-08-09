@@ -10,23 +10,6 @@ col_data_nam <- colnames(colData(se))
 
 #Display assay name
 assay <- assayNames(se)
-batch_dat_list <- list()
-col_data_list <- list()
-input_dat <- assay(se, assay)
-batch_dat <- colData(se)[, col_data_nam %in% "batch"]
-col_data <- colData(se)[, col_data_nam %in% "condition"]
-
-# Loop over unique elements
-for(i in unique(batch_dat)) {
-  # Create a new list element for each unique element in col_data
-  batch_dat_list[[paste0("batch_dat", i)]] <- batch_dat[batch_dat == i]
-}
-
-# Loop over unique elements
-for(i in unique(col_data)) {
-  # Create a new list element for each unique element in col_data
-  col_data_list[[paste0("col_data", i)]] <- col_data[col_data == i]
-}
 
 process_dendrogram <- function(se, assay, annotation_column) {
   

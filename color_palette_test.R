@@ -13,6 +13,6 @@ create_dark_palette <- function(n) {
 }
 
 # Test the function
-n <- 100  # Change this value as you need
-dark_colors <- create_dark_palette(n)
-show_col(dark_colors)
+#n <- 100  # Change this value as you need
+#dark_colors <- create_dark_palette(n)
+#show_col(dark_colors)

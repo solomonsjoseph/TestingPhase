@@ -1,44 +1,52 @@
-se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
-col_data_nam <- colnames(colData(se))
-assay_choice <- assayNames(se)
-input_dat <- assay(se, assay_choice)
-batch_dat <- colData(se)[, col_data_nam %in% "batch"]
-col_data <- colData(se)[, col_data_nam %in% "condition"]
-batch_dat_list <- list()
-col_data_list <- list()
-for(i in unique(batch_dat)) {
-  # Create a new list element for each unique element in col_data
-  batch_dat_list[[paste0("batch_dat", i)]] <- batch_dat[batch_dat == i]
+library(patchwork)
+
+dendrogram_plotter <- function(se, assay, annotation_columns) {
+  
+  dends <- process_dendrogram(se, assay, annotation_columns)
+  
+  dendrogram_ends <- dends$dendrogram_ends
+  dendrogram_segments <- dends$dendrogram_segments
+  
+  dendrogram_plots <- list()
+  
+  for (annotation_column in annotation_columns) {
+    
+    unique_vars <- levels(factor(dendrogram_ends[, annotation_column])) %>% 
+      as.data.frame() %>% rownames_to_column("row_id") 
+    
+    color_count <- length(unique(unique_vars$.))
+    get_palette <- grDevices::colorRampPalette(brewer.pal(
+      n = length(unique(dendrogram_ends[, annotation_column])),
+      name = "Spectral"))
+    palette <- get_palette(color_count) %>% as.data.frame() %>%
+      rename("color" = ".") %>%
+      rownames_to_column(var = "row_id")
+    color_list <- left_join(unique_vars, palette, by = "row_id") %>%
+      select(-row_id)
+    annotation_color <- as.character(color_list$color)
+    names(annotation_color) <- color_list$.
+    
+    dendrogram <- ggplot() +
+      geom_segment(data = dendrogram_segments, 
+                   aes(x = x, y = y, xend = xend, yend = yend)) +
+      geom_segment(data = dendrogram_ends,
+                   aes(x = x, y = y.x, xend = xend, yend = yend, 
+                       color = dendrogram_ends[, annotation_column])) +
+      scale_color_manual(values = annotation_color, name = as.character(annotation_column)) +
+      scale_y_reverse() +
+      coord_flip() + theme(
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank()) +
+      theme_bw() + ylab("Distance")
+    
+    dendrogram_plots[[annotation_column]] <- dendrogram
+  }
+  
+  return(dendrogram_plots)
 }
-for(i in unique(col_data)) {
-  # Create a new list element for each unique element in col_data
-  col_data_list[[paste0("col_data", i)]] <- col_data[col_data == i]
-}
-data <- t(se@assays@data[[assay_choice]])
-#required lib: tidyverse
-dat <- as.data.frame(data) %>% mutate(sample_name = paste("sample", seq_len(nrow(data)), sep = "_"))
-rownames(dat) <- dat$sample_name
-sample_name <- dat$sample_name
-metadata <- cbind(as.data.frame(colData(se)),sample_name)
-metadata[] <- lapply(metadata, as.character)
-dist_matrix <- stats::dist(dat, method = "euclidean")
 
-dendrogram <- stats::as.dendrogram(
-  stats::hclust(
-    dist_matrix, 
-    method = "complete")
-)
-
-#uses library(ggdendro)
-dendrogram_data <- dendro_data(dendrogram)
-dendrogram_segments <- dendrogram_data$segments
-dendrogram_ends <- dendrogram_segments %>%
-  filter(yend == 0) %>% 
-  left_join(dendrogram_data$labels, by = "x") %>% 
-  rename(sample_name = label) %>%
-  left_join(metadata, by = "sample_name")
-
-annotation_column <- col_data_nam[1]
-
-unique_vars <- levels(factor(dendrogram_ends[,annotation_column])) %>% 
-  as.data.frame() %>% rownames_to_column("row_id") 
+# Usage:
+annotation_columns <- c("column1", "column2")
+plots <- dendrogram_plotter(se, assay, annotation_columns)
+combined_plot <- plots$column1 + plots$column2 + plot_layout(ncol = 2)
+print(combined_plot)

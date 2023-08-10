@@ -3,6 +3,7 @@ library(RColorBrewer)
 library(dplyr)
 
 source("ProcessDendo.R")
+source("custom_color_palette.R")
 
 dendrogram_plotter <- function(se, assay, annotation_column) {
   

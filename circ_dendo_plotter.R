@@ -1,18 +1,21 @@
 # Load necessary packages
 library(tidyverse)
-library(cowplot)
+library(patchwork)
 
-source("Combined_Dendo_plotter.R")
+source("ProcessDendo.R")
+source("DendogramPlot.R")
 
-circ_dendo_plotter <- function(se, assay, annotation_columns) {
+circ_dendo_plotter <- function(se, assay, annotation_column) {
   
-  Combined_dendoPlot <- combined_dendrogram_plot(se, assay, annotation_columns)
+  dendoPlot <- dendrogram_plotter(se, assay, annotation_column)
   
-  circular_dendrogram <- Combined_dendoPlot + coord_polar(theta="x")
+  circular_dendrogram <- dendoPlot + coord_polar(theta="x")
   
   return(circular_dendrogram)
 }
 
 # Using the function
-plot <- circ_dendo_plotter(se, assay, annotation_columns = col_data_nam)
-print(plot)
+plot1 <- circ_dendo_plotter(se, assay, annotation_column = col_data_nam[1])
+plot2 <- circ_dendo_plotter(se, assay, annotation_column = col_data_nam[2])
+combined_plot <- plot1 + plot2 + plot_layout(ncol = 2)
+print(combined_plot)

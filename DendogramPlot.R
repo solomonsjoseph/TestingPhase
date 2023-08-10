@@ -6,18 +6,14 @@ source("ProcessDendo.R")
 
 dendrogram_plotter <- function(se, assay, annotation_column) {
   
-  # Check if required parameters are not null
-  if(is.null(se) | is.null(assay) | is.null(annotation_column)){
-    stop("One or more required parameters are NULL")
-  }
-  
   dends <- process_dendrogram(se, assay, annotation_column)
-  if(is.null(dends) | !("dendrogram_ends" %in% names(dends))){
-    stop("Unexpected output from process_dendrogram")
-  }
   
   dendrogram_ends <- dends$dendrogram_ends
+  
   dendrogram_segments <- dends$dendrogram_segments
+  
+  # Convert dendrogram_ends[,annotation_column] to numeric, if it's expected to be numeric
+  #dendrogram_ends[,annotation_column] <- as.numeric(as.character(dendrogram_ends[,annotation_column]))
   
   # Separate the numeric and non-numeric values
   numeric_levels <- as.numeric(as.character(dendrogram_ends[,annotation_column]))
@@ -68,7 +64,6 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
       axis.ticks.y=element_blank()) +
     theme_bw() + ylab("Distance")
   
-  return(dendrogram)
+  return(dendrogram=dendrogram)
 }
-
 #dendrogram_plotter(se, assay, annotation_column = col_data_nam[2])

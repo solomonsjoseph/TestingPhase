@@ -25,5 +25,5 @@ combined_dendrogram_plot <- function(se, assay, annotation_columns) {
 }
 
 # Usage example:
-# combined_plot <- combined_dendrogram_plot(se, assay, annotation_columns=col_data_nam)
-# print(combined_plot)
+combined_plot <- combined_dendrogram_plot(se, assay, annotation_columns=col_data_nam)
+ print(combined_plot)

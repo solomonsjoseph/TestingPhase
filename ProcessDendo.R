@@ -31,9 +31,10 @@ process_dendrogram <- function(se, assay, annotation_column) {
   dendrogram_data <- dendro_data(dendrogram)
   dendrogram_segments <- dendrogram_data$segments
   dendrogram_ends <- dendrogram_segments %>%
-    filter(yend == 0) %>% 
-    left_join(dendrogram_data$labels, by = "x") %>% 
-    rename(sample_name = label) %>%
+    filter(yend == 0) %>%
+    left_join(dendrogram_data$labels, by = "x") %>%
+    mutate(sample_name = label) %>%  # Use mutate instead of rename
+    select(-label) %>%               # Drop the original 'label' column
     left_join(metadata, by = "sample_name")
   
   return(list(dendrogram_ends=dendrogram_ends,

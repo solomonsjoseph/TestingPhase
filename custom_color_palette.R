@@ -16,3 +16,7 @@ create_color_palette <- function(n) {
 #n <- 100  # Change this value as you need
 #colors <- create_color_palette(n)
 #show_col(colors)
+
+#test_palette <- create_color_palette(5)
+#print(test_palette)
+

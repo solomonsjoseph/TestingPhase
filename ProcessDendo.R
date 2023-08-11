@@ -24,6 +24,8 @@ random_diseases <- sample(diseases, length(diseases))
 
 colData(se)$Diseases <- random_diseases
 
+##### End of Data #####
+
 #To display Batch and condition separately
 col_data_nam <- colnames(colData(se))
 

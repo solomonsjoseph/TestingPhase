@@ -5,6 +5,27 @@ library(dplyr)
 #Dataset
 se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
 
+##### New Data added #####
+sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Male'
+)
+
+# Using accessor functions
+colData(se)$sex <- sex
+
+# Define 10 specific diseases
+unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza", 
+                     "Ebola", "Zika", "Dengue", "Typhoid", "Measles")
+
+# Repeating the diseases until we have a list of 89
+diseases <- rep(unique_diseases, ceiling(89 / length(unique_diseases)))[1:89]
+
+# Shuffle the diseases list to introduce randomness
+random_diseases <- sample(diseases, length(diseases))
+
+colData(se)$Diseases <- random_diseases
+
+##### END of Data #####
+
 #To display Batch and condition separately
 col_data_nam <- colnames(colData(se))
 
@@ -42,4 +63,4 @@ process_dendrogram <- function(se, assay, annotation_column) {
   
 }
 
-process_dendrogram(se, assay, annotation_column = col_data_nam[1])
+#process_dendrogram(se, assay, annotation_column = col_data_nam[3])

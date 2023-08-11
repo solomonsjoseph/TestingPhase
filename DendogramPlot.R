@@ -1,4 +1,5 @@
 library(ggdendro)
+library(ggplot2)
 library(RColorBrewer)
 library(dplyr)
 
@@ -16,19 +17,20 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
   # Convert dendrogram_ends[,annotation_column] to numeric, if it's expected to be numeric
   #dendrogram_ends[,annotation_column] <- as.numeric(as.character(dendrogram_ends[,annotation_column]))
   
-  # Separate the numeric and non-numeric values
-  numeric_levels <- as.numeric(as.character(dendrogram_ends[,annotation_column]))
-  numeric_levels <- numeric_levels[!is.na(numeric_levels)]
-  sorted_numeric_levels <- sort(unique(numeric_levels))
-  
-  non_numeric_levels <- dendrogram_ends[,annotation_column][is.na(numeric_levels)]
-  sorted_non_numeric_levels <- sort(unique(as.character(non_numeric_levels)))
-  
-  # Combine the two sorted lists
-  sorted_levels <- c(as.character(sorted_numeric_levels), sorted_non_numeric_levels)
+  ## Attempting to better order legends to work with character and Numeric (Minor issue)
+  # # Separate the numeric and non-numeric values
+  # numeric_levels <- as.numeric(as.character(dendrogram_ends[,annotation_column]))
+  # numeric_levels <- numeric_levels[!is.na(numeric_levels)]
+  # sorted_numeric_levels <- sort(unique(numeric_levels))
+  # 
+  # non_numeric_levels <- dendrogram_ends[,annotation_column][is.na(numeric_levels)]
+  # sorted_non_numeric_levels <- sort(unique(as.character(non_numeric_levels)))
+  # 
+  # # Combine the two sorted lists
+  # sorted_levels <- c(as.character(sorted_numeric_levels), sorted_non_numeric_levels)
   
   # Ensure dendrogram_ends[,annotation_column] is treated as a factor with sorted levels
-  dendrogram_ends[,annotation_column] <- factor(dendrogram_ends[,annotation_column], levels = sorted_levels)
+  #dendrogram_ends[,annotation_column] <- factor(dendrogram_ends[,annotation_column]) #, levels = sorted_levels)
   
   # Create unique_vars dataframe
   unique_vars <- levels(factor(dendrogram_ends[,annotation_column])) %>% 
@@ -67,4 +69,4 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
   
   return(dendrogram=dendrogram)
 }
-#dendrogram_plotter(se, assay, annotation_column = col_data_nam[2])
+#dendrogram_plotter(se, assay, annotation_column = col_data_nam[4])

@@ -2,6 +2,7 @@ library(ggdendro)
 library(ggplot2)
 library(RColorBrewer)
 library(dplyr)
+library(tibble)
 
 source("ProcessDendo.R")
 
@@ -37,12 +38,14 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
   
   # Determine color count and palette
   color_count <- length(unique(unique_vars$.))
-  get_palette <- grDevices::colorRampPalette(brewer.pal(
-    n = length(unique(dendrogram_ends[,annotation_column])),
-    name = "Paired")) #Paired is default
+  n <- length(unique(dendrogram_ends[, annotation_column]))
+  palette_name <- ifelse(n < 5, "Spectral", "Paired")
   
-  palette <- get_palette(color_count) %>% as.data.frame() %>%
-    rename("color" = ".") %>%
+  get_palette <- grDevices::colorRampPalette(brewer.pal(n = n, name = palette_name))
+  
+  palette <- get_palette(color_count) %>%
+    as.data.frame() %>%
+    dplyr::rename("color" = ".") %>%
     rownames_to_column(var = "row_id")
   
   # Join the palette and unique_vars
@@ -59,6 +62,8 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
     geom_segment(data = dendrogram_ends,
                  aes(x=x, y=y.x, xend=xend, yend=yend, 
                      color = dendrogram_ends[,annotation_column])) +
+    geom_text(data = dendrogram_ends,
+              aes(x=x, y=y.x, label=annotation_column, color = dendrogram_ends[,annotation_column]), check_overlap = TRUE) +  # Adjusting the hjust value to avoid overlap with lines
     scale_color_manual(values = annotation_color, limits = names(annotation_color), name = as.character(annotation_column)) +
     scale_y_reverse() +
     coord_flip() + theme(
@@ -68,4 +73,4 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
   
   return(dendrogram=dendrogram)
 }
-#dendrogram_plotter(se, assay, annotation_column = col_data_nam[4])
+dendrogram_plotter(se, assay, annotation_column = col_data_nam[1])

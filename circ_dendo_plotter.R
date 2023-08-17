@@ -13,5 +13,5 @@ circ_dendo_plotter <- function(se, assay, batch, category) {
 }
 
 # Using the function
-plot1 <- circ_dendo_plotter(se, assay, batch = "batch", category = "condition")
-print(plot1)
+circ_dendo_plotter(se, assay, batch = "batch", category = "condition")
+# print(plot1)

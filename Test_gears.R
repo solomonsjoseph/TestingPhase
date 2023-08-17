@@ -14,9 +14,11 @@ correct_indices <- match(dendro_labels, rownames(mtcars))
 
 # Factorize the 'gear', 'car_name', and 'mpg' columns for coloring
 mtcars$gear <- as.factor(mtcars$gear)
+mtcars$mpg <- as.factor(mtcars$mpg)
 
 # Extract 'gear', 'car_name', and 'mpg' values using the correct indices
 gear_labels <- mtcars$gear[correct_indices]
+mpg_labels <- mtcars$mpg[correct_indices]
 
 # Build the plot
 p <- ggplot() + 
@@ -24,6 +26,9 @@ p <- ggplot() +
                aes(x=x, y=y, xend=xend, yend=yend)) +
   geom_text(data=dendro_data$labels, 
             aes(x, y, label=gear_labels, color=gear_labels), 
+            hjust=-0.2, check_overlap = TRUE) +
+  geom_text(data=dendro_data$labels, 
+            aes(x, y, label=mpg_labels, color=gear_labels), 
             hjust=-0.2, check_overlap = TRUE) +
   coord_flip() + 
   scale_y_reverse() +

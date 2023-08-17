@@ -63,7 +63,8 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
                  aes(x=x, y=y.x, xend=xend, yend=yend, 
                      color = dendrogram_ends[,annotation_column])) +
     geom_text(data = dendrogram_ends,
-              aes(x=x, y=y.x, label=annotation_column, color = dendrogram_ends[,annotation_column]), check_overlap = TRUE) +  # Adjusting the hjust value to avoid overlap with lines
+              aes(x=x, y=y.x, label=annotation_column, 
+                  color = dendrogram_ends[,annotation_column]), check_overlap = TRUE) +
     scale_color_manual(values = annotation_color, limits = names(annotation_color), name = as.character(annotation_column)) +
     scale_y_reverse() +
     coord_flip() + theme(
@@ -71,6 +72,6 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
       axis.ticks.y=element_blank()) +
     theme_bw() + ylab("Distance")
   
-  return(dendrogram=dendrogram)
+  return(dendrogram)
 }
-dendrogram_plotter(se, assay, annotation_column = col_data_nam[1])
+dendrogram_plotter(se, assay, annotation_column = col_data_nam[2])

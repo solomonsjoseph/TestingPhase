@@ -4,8 +4,9 @@ library(dplyr)
 
 #Dataset
 se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
+# se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 
-#Removes NAs
+#Removes NAs if present in SE object
 se <- se[which(rownames(se) !="NA")]
 
 ##### New Data added #####
@@ -16,7 +17,7 @@ sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male',
 colData(se)$sex <- sex
 
 # Define 10 specific diseases
-unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza", 
+unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza",
                      "Ebola", "Zika", "Dengue", "Typhoid", "Measles")
 
 # Repeating the diseases until we have a list of 89
@@ -30,12 +31,12 @@ colData(se)$Diseases <- random_diseases
 ##### End of Data #####
 
 #To display Batch and condition separately
-col_data_nam <- colnames(colData(se))
+col_data_nam <<- colnames(colData(se))
 
 #Display assay name
 assay <- assayNames(se)
 
-process_dendrogram <- function(se, assay, annotation_column) {
+process_dendrogram <- function(se, assay) {
   
   data <- t(se@assays@data[[assay]])
   dat <- as.data.frame(data) %>%
@@ -44,6 +45,7 @@ process_dendrogram <- function(se, assay, annotation_column) {
   sample_name <- dat$sample_name
   metadata <- cbind(as.data.frame(colData(se)),sample_name)
   metadata[] <- lapply(metadata, as.character)
+  #This line of code is the reason for the NAs being introduced
   dist_matrix <- stats::dist(dat, method = "euclidean")
   
   dendrogram <- stats::as.dendrogram(
@@ -67,4 +69,4 @@ process_dendrogram <- function(se, assay, annotation_column) {
   
 }
 
-#process_dendrogram(se, assay, annotation_column = col_data_nam[1])
+#process_dendrogram(se, assay, batch, category)

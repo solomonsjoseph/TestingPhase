@@ -3,9 +3,9 @@ library(tidyverse)
 
 source("DendogramPlot.R")
 
-circ_dendo_plotter <- function(se, assay, annotation_column) {
+circ_dendo_plotter <- function(se, assay, batch, category) {
   
-  dendoPlot <- dendrogram_plotter(se, assay, annotation_column)
+  dendoPlot <- dendrogram_plotter(se, assay, batch, category)
   
   circular_dendrogram <- dendoPlot + coord_polar(theta="x")
   
@@ -13,5 +13,5 @@ circ_dendo_plotter <- function(se, assay, annotation_column) {
 }
 
 # Using the function
-plot1 <- circ_dendo_plotter(se, assay, annotation_column = col_data_nam[4])
+plot1 <- circ_dendo_plotter(se, assay, batch = "batch", category = "condition")
 print(plot1)

@@ -64,4 +64,4 @@ process_dendrogram <- function(se, assay, annotation_column) {
   
 }
 
-#process_dendrogram(se, assay, annotation_column = col_data_nam[3])
+# process_dendrogram(se, assay, annotation_column = col_data_nam[2])

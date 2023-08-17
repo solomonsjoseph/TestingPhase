@@ -51,4 +51,4 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
   
   return(dendrogram=dendrogram)
 }
-#dendrogram_plotter(se, assay, annotation_column = col_data_nam[4])
+dendrogram_plotter(se, assay, annotation_column = col_data_nam[1])

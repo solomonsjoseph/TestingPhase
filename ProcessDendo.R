@@ -57,6 +57,7 @@ process_dendrogram <- function(se, assay, annotation_column) {
     left_join(dendrogram_data$labels, by = "x") %>%
     mutate(sample_name = label) %>%  # Use mutate instead of rename
     select(-label) %>%               # Drop the original 'label' column
+    filter(!is.na(sample_name)) %>% # To remove NAs originated previously
     left_join(metadata, by = "sample_name")
   
   return(list(dendrogram_ends=dendrogram_ends,

@@ -3,7 +3,7 @@ library(ggdendro)
 library(dplyr)
 
 #Dataset
-se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
+se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 
 ##### New Data added #####
 sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Male'
@@ -13,7 +13,7 @@ sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male',
 colData(se)$sex <- sex
 
 # Define 10 specific diseases
-unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza", 
+unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza",
                      "Ebola", "Zika", "Dengue", "Typhoid", "Measles")
 
 # Repeating the diseases until we have a list of 89
@@ -24,7 +24,10 @@ random_diseases <- sample(diseases, length(diseases))
 
 colData(se)$Diseases <- random_diseases
 
-##### END of Data #####
+##### End of Data #####
+
+#Removes NAs if present in SE object
+se <- se[which(rownames(se) !="NA")]
 
 #To display Batch and condition separately
 col_data_nam <- colnames(colData(se))

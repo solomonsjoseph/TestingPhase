@@ -32,26 +32,8 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
   # Ensure dendrogram_ends[,annotation_column] is treated as a factor with sorted levels
   #dendrogram_ends[,annotation_column] <- factor(dendrogram_ends[,annotation_column]) #, levels = sorted_levels)
   
-  # Create unique_vars dataframe
-  unique_vars <- levels(factor(dendrogram_ends[,annotation_column])) %>% 
-    as.data.frame() %>% rownames_to_column("row_id") 
-  
-  # Determine color count and palette
-  color_count <- length(unique(unique_vars$.))
-  get_palette <- grDevices::colorRampPalette(brewer.pal(
-    n = length(unique(dendrogram_ends[,annotation_column])),
-    name = "Paired")) #Paired is default
-  
-  palette <- get_palette(color_count) %>% as.data.frame() %>%
-    rename("color" = ".") %>%
-    rownames_to_column(var = "row_id")
-  
-  # Join the palette and unique_vars
-  color_list <- left_join(unique_vars, palette, by = "row_id") %>%
-    select(-row_id)
-  
-  # Create a named vector for annotation_color
-  annotation_color <- setNames(color_list$color, color_list$.)
+  #Custom Color palette
+  annotation_color <- custom_color_palette(annotation_column)
   
   # Create dendrogram plot
   dendrogram <- ggplot() +

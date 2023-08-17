@@ -6,22 +6,21 @@ library(dplyr)
 se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 
 ##### New Data added #####
-sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Male'
-)
+# unique_sex <- c('Male', 'Female')
 
-# Using accessor functions
-colData(se)$sex <- sex
-
-# Define 10 specific diseases
 unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza",
                      "Ebola", "Zika", "Dengue", "Typhoid", "Measles")
 
 # Repeating the diseases until we have a list of 89
+# sex <- rep(unique_sex, ceiling(89/length(unique_sex)))[1:89]
 diseases <- rep(unique_diseases, ceiling(89 / length(unique_diseases)))[1:89]
 
 # Shuffle the diseases list to introduce randomness
 random_diseases <- sample(diseases, length(diseases))
+# random_sex <- sample(sex, length(sex))
 
+# Using accessor functions
+# colData(se)$sex <- random_sex
 colData(se)$Diseases <- random_diseases
 
 ##### End of Data #####

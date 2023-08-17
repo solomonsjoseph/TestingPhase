@@ -1,25 +1,36 @@
-#Testing colors
+library(RColorBrewer)
 
-library(scales)
+source("ProcessDendo.R")
 
-create_color_palette <- function(n) {
-  # Define the base colors for interpolation 
-  base_colors <- c("#F15A59", "#3D1766", "#00DFA2", "#FBFFB1", "#9A1663", "#ABC9FF")
+custom_color_palette <- function(col) {
   
-  # Use colorRampPalette to interpolate
-  palette <- colorRampPalette(base_colors)(n)
+  dend <- process_dendrogram(se, assay)
+  dendrogram_ends <- dend$dendrogram_ends
   
-  return(palette)
+  # Create unique_vars dataframe
+  unique_vars <- levels(factor(dendrogram_ends[,col])) %>%
+    as.data.frame() %>% rownames_to_column("row_id")
+  
+  # Determine color count and palette
+  color_count <- length(unique(unique_vars$.))
+  n <- length(unique(dendrogram_ends[,col]))
+  palette_name <- ifelse(n < 5, "Spectral", "Paired")
+  
+  get_palette <- grDevices::colorRampPalette(brewer.pal(n = n, name = palette_name))
+  
+  palette <- get_palette(color_count) %>%
+    as.data.frame() %>%
+    dplyr::rename("color" = ".") %>%
+    rownames_to_column(var = "row_id")
+  
+  # Join the palette and unique_vars
+  color_list <- left_join(unique_vars, palette, by = "row_id") %>%
+    select(-row_id)
+  
+  # Create a named vector for annotation_color
+  annotation_color <- setNames(color_list$color, color_list$.)
+  
+  return(annotation_color)
 }
 
-# Test the function
-#n <- 100  # Change this value as you need
-#colors <- create_color_palette(n)
-#show_col(colors)
-<<<<<<< HEAD
-=======
-
-#test_palette <- create_color_palette(5)
-#print(test_palette)
-
->>>>>>> TestingPhase
+custom_color_palette(col = "batch")

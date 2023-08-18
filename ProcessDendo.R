@@ -5,7 +5,6 @@ library(ggplot2)
 library(ggnewscale)
 
 #Dataset
-<<<<<<< HEAD
 se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 
 # ##### New Data added #####
@@ -27,7 +26,6 @@ se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 # 
 # ##### End of Data #####
 
-=======
 # se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 
 ##### New Data added #####
@@ -52,7 +50,6 @@ colData(se)$diseases <- random_diseases
 
 ##### End of Data #####
 
->>>>>>> TestingPhase
 #Removes NAs if present in SE object
 se <- se[which(rownames(se) !="NA")]
 
@@ -87,11 +84,7 @@ process_dendrogram <- function(se, assay) {
     left_join(dendrogram_data$labels, by = "x") %>%
     mutate(sample_name = label) %>%  # Use mutate instead of rename
     select(-label) %>%               # Drop the original 'label' column
-<<<<<<< HEAD
     filter(!is.na(sample_name)) %>% # To remove NAs originated previously
-=======
-    filter(!is.na(sample_name)) %>%
->>>>>>> TestingPhase
     left_join(metadata, by = "sample_name")
   
   return(list(dendrogram_ends=dendrogram_ends,
@@ -99,8 +92,4 @@ process_dendrogram <- function(se, assay) {
   
 }
 
-<<<<<<< HEAD
-# process_dendrogram(se, assay, annotation_column = col_data_nam[2])
-=======
 #process_dendrogram(se, assay)
->>>>>>> TestingPhase

@@ -1,12 +1,4 @@
-<<<<<<< HEAD
-library(RColorBrewer)
-
 source("ProcessDendo.R")
-
-=======
-source("ProcessDendo.R")
-
->>>>>>> TestingPhase
 custom_color_palette <- function(col) {
   
   dend <- process_dendrogram(se, assay)
@@ -38,4 +30,4 @@ custom_color_palette <- function(col) {
   return(annotation_color)
 }
 
-custom_color_palette(col = "batch")
+# custom_color_palette(col = "batch")

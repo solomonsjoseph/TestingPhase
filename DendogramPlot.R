@@ -49,10 +49,10 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
     geom_text(data = dendrogram_ends,
               #Minor bug with adding y=y.y-1.5
               aes(x=x, y=y.y-1.5, label=dendrogram_ends[,category], 
-                  color = dendrogram_ends[,category]
-              ), check_overlap = TRUE, size = 2) +
+                  color = dendrogram_ends[,category],
+              hjust = "left"), check_overlap = TRUE, size = 2) +
     scale_color_manual(values = category_color, name = category, guide_legend(override.aes = category_color, order = 2))  +
-    scale_y_reverse() +
+    scale_y_reverse(expand = c(0.2,0)) +
     coord_flip() + theme(
       axis.text.y=element_blank(),
       axis.ticks.y=element_blank()) +
@@ -61,4 +61,4 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   return(dendrogram)
 }
 
-# dendrogram_plotter(se, assay, batch_v = "batch", category = "diseases")
+# dendrogram_plotter(se, assay, batch_v = "batch", category = "sex")

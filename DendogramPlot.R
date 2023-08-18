@@ -61,4 +61,4 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   return(dendrogram)
 }
 
-# dendrogram_plotter(se, assay, batch_v = "batch", category = "diseases")
+# dendrogram_plotter(se, assay, batch_v = "batch", category = "condition")

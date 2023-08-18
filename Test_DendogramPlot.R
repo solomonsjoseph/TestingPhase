@@ -48,10 +48,10 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
                      )) +
     geom_text(data = dendrogram_ends,
               aes(x=x, y=y.x, label=dendrogram_ends[,category], 
-                  # color = dendrogram_ends[,category]
+                  color = dendrogram_ends[,category]
                   ), check_overlap = TRUE, size = 2, show.legend = TRUE) +
     # scale_color_manual("Batch", values = batch_color, limits = names(batch_color), name = as.character(batch_v), guide = guide_legend(order = 1)) +
-    scale_color_manual("Category", values = category_color, limits = names(category_color), name = as.character(category), guide = guide_legend(order = 2)) +
+    # scale_color_manual("Category", values = category_color, limits = names(category_color), name = as.character(category), guide = guide_legend(order = 2)) +
     scale_y_reverse() +
     coord_flip() + theme(
       axis.text.y=element_blank(),

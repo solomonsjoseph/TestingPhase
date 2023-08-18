@@ -1,12 +1,14 @@
+#All neccessary libraries loaded here
 library(tibble)
-library(ggdendro)
 library(dplyr)
+library(ggplot2)
+library(ggnewscale)
 
 #Dataset
-se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
 # se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 
 ##### New Data added #####
+se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
 sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Male'
 )
 
@@ -23,7 +25,7 @@ diseases <- rep(unique_diseases, ceiling(89 / length(unique_diseases)))[1:89]
 # Shuffle the diseases list to introduce randomness
 random_diseases <- sample(diseases, length(diseases))
 
-colData(se)$Diseases <- random_diseases
+colData(se)$diseases <- random_diseases
 
 ##### End of Data #####
 
@@ -69,4 +71,4 @@ process_dendrogram <- function(se, assay) {
   
 }
 
-#process_dendrogram(se, assay, batch, category)
+#process_dendrogram(se, assay)

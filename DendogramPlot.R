@@ -1,9 +1,3 @@
-library(ggdendro)
-library(ggplot2)
-library(RColorBrewer)
-library(dplyr)
-library(tibble)
-
 source("ProcessDendo.R")
 source("custom_color_palette.R")
 
@@ -15,10 +9,11 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   
   dendrogram_segments <- dends$dendrogram_segments
   
+  ##### Minor issue related to legend alignment when displayed fix #####
   # Convert dendrogram_ends[,batch_v] to numeric, if it's expected to be numeric
   #dendrogram_ends[,batch_v] <- as.numeric(as.character(dendrogram_ends[,batch_v]))
   
-  ## Attempting to better order legends to work with character and Numeric (Minor issue)
+  ## Attempting to better order **legends** to work with character and Numeric (Minor issue)
   # # Separate the numeric and non-numeric values
   # numeric_levels <- as.numeric(as.character(dendrogram_ends[,batch_v]))
   # numeric_levels <- numeric_levels[!is.na(numeric_levels)]
@@ -32,11 +27,13 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   
   # Ensure dendrogram_ends[,batch_v] is treated as a factor with sorted levels
   #dendrogram_ends[,batch_v] <- factor(dendrogram_ends[,batch_v]) #, levels = sorted_levels)
+  ##### ends here #####
   
-  #Custom color palette used
+  #Custom color palette used | few bugs in the color palette - need to update with new colors
   batch_color <- custom_color_palette(col = batch_v)
   category_color <- custom_color_palette(col = category)
   
+  #This line of code needs to be modified to fix the y=y.y issue on line 57
   buffer <- max(dendrogram_ends$x) * -0.12
   
   # Create dendrogram plot
@@ -45,11 +42,16 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
                  aes(x=x, y=y, xend=xend, yend=yend)) +
     geom_segment(data = dendrogram_ends,
                  aes(x=x, y=y.x, xend=xend, yend=yend, 
-                     color = dendrogram_ends[,batch_v]), show.legend = TRUE) +
+                     color = dendrogram_ends[,batch_v]
+                 )) +
+    scale_color_manual(values = batch_color, name = batch_v, guide_legend(override.aes = batch_color, order = 1)) +
+    new_scale_color() +
     geom_text(data = dendrogram_ends,
-              aes(x=x, y=y.x + buffer, label=dendrogram_ends[,category], 
-                  color = dendrogram_ends[,category]), check_overlap = TRUE, size = 2, show.legend = TRUE) +
-    # scale_color_manual(values = annotation_color, limits = names(annotation_color), name = as.character(batch_v)) +
+              #Minor bug with adding y=y.y-1.5
+              aes(x=x, y=y.y-1.5, label=dendrogram_ends[,category], 
+                  color = dendrogram_ends[,category]
+              ), check_overlap = TRUE, size = 2) +
+    scale_color_manual(values = category_color, name = category, guide_legend(override.aes = category_color, order = 2))  +
     scale_y_reverse() +
     coord_flip() + theme(
       axis.text.y=element_blank(),
@@ -59,4 +61,4 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   return(dendrogram)
 }
 
-dendrogram_plotter(se, assay, batch_v = "batch", category = "condition")
+# dendrogram_plotter(se, assay, batch_v = "batch", category = "diseases")

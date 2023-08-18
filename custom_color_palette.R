@@ -1,5 +1,3 @@
-library(RColorBrewer)
-
 source("ProcessDendo.R")
 
 custom_color_palette <- function(col) {

@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 library(RColorBrewer)
 
 source("ProcessDendo.R")
 
+=======
+source("ProcessDendo.R")
+
+>>>>>>> TestingPhase
 custom_color_palette <- function(col) {
   
   dend <- process_dendrogram(se, assay)

@@ -1,8 +1,11 @@
+#All neccessary libraries loaded here
 library(tibble)
-library(ggdendro)
 library(dplyr)
+library(ggplot2)
+library(ggnewscale)
 
 #Dataset
+<<<<<<< HEAD
 se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 
 # ##### New Data added #####
@@ -24,16 +27,42 @@ se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 # 
 # ##### End of Data #####
 
+=======
+# se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
+
+##### New Data added #####
+se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
+sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Male'
+)
+
+# Using accessor functions
+colData(se)$sex <- sex
+
+# Define 10 specific diseases
+unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza",
+                     "Ebola", "Zika", "Dengue", "Typhoid", "Measles")
+
+# Repeating the diseases until we have a list of 89
+diseases <- rep(unique_diseases, ceiling(89 / length(unique_diseases)))[1:89]
+
+# Shuffle the diseases list to introduce randomness
+random_diseases <- sample(diseases, length(diseases))
+
+colData(se)$diseases <- random_diseases
+
+##### End of Data #####
+
+>>>>>>> TestingPhase
 #Removes NAs if present in SE object
 se <- se[which(rownames(se) !="NA")]
 
 #To display Batch and condition separately
-col_data_nam <- colnames(colData(se))
+col_data_nam <<- colnames(colData(se))
 
 #Display assay name
 assay <- assayNames(se)
 
-process_dendrogram <- function(se, assay, annotation_column) {
+process_dendrogram <- function(se, assay) {
   
   data <- t(se@assays@data[[assay]])
   dat <- as.data.frame(data) %>%
@@ -42,6 +71,7 @@ process_dendrogram <- function(se, assay, annotation_column) {
   sample_name <- dat$sample_name
   metadata <- cbind(as.data.frame(colData(se)),sample_name)
   metadata[] <- lapply(metadata, as.character)
+  #This line of code is the reason for the NAs being introduced
   dist_matrix <- stats::dist(dat, method = "euclidean")
   
   dendrogram <- stats::as.dendrogram(
@@ -57,7 +87,11 @@ process_dendrogram <- function(se, assay, annotation_column) {
     left_join(dendrogram_data$labels, by = "x") %>%
     mutate(sample_name = label) %>%  # Use mutate instead of rename
     select(-label) %>%               # Drop the original 'label' column
+<<<<<<< HEAD
     filter(!is.na(sample_name)) %>% # To remove NAs originated previously
+=======
+    filter(!is.na(sample_name)) %>%
+>>>>>>> TestingPhase
     left_join(metadata, by = "sample_name")
   
   return(list(dendrogram_ends=dendrogram_ends,
@@ -65,4 +99,8 @@ process_dendrogram <- function(se, assay, annotation_column) {
   
 }
 
+<<<<<<< HEAD
 # process_dendrogram(se, assay, annotation_column = col_data_nam[2])
+=======
+#process_dendrogram(se, assay)
+>>>>>>> TestingPhase

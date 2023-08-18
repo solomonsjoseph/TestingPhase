@@ -33,7 +33,7 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   batch_color <- custom_color_palette(col = batch_v)
   category_color <- custom_color_palette(col = category)
   
-  #This line of code needs to be modified to fix the y=y.y issue on line 57
+  #This line of code needs to be modified to fix the y=y.y issue
   buffer <- max(dendrogram_ends$x) * -0.12
   
   # Create dendrogram plot

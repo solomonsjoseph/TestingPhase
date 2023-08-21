@@ -33,7 +33,7 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   batch_color <- custom_color_palette(col = batch_v)
   category_color <- custom_color_palette(col = category)
   
-  #This line of code needs to be modified to fix the y=y.y issue on line 57
+  #This line of code needs to be modified to fix the y=y.y issue
   buffer <- max(dendrogram_ends$x) * -0.12
   
   # Create dendrogram plot
@@ -49,10 +49,15 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
     geom_text(data = dendrogram_ends,
               #Minor bug with adding y=y.y-1.5
               aes(x=x, y=y.y-1.5, label=dendrogram_ends[,category], 
-                  color = dendrogram_ends[,category]
-              ), check_overlap = TRUE, size = 2) +
-    scale_color_manual(values = category_color, name = category, guide_legend(override.aes = category_color, order = 2))  +
-    scale_y_reverse() +
+                  color = dendrogram_ends[,category],
+              hjust = "left"), check_overlap = TRUE, size = 2) +
+    # scale_color_manual(values = category_color, name = category, guide_legend(override.aes = category_color, order = 2))  +
+    # scale_color_manual(values = category_color, name = category, guides(color = guide_legend(override.aes = aes(label = category_color))))  +
+    # guides(color = guide_legend(override.aes = aes(label = as.character(category_color), alpha = 1))) +
+    guides(color = guide_legend(override.aes = aes(label = "━", alpha = 1))) +
+    # guides(color = guide_legend(override.aes = aes(label = "—", alpha = 1))) +
+    scale_color_manual(values = category_color, name = category)  +
+    scale_y_reverse(expand = c(0.2,0)) +
     coord_flip() + theme(
       axis.text.y=element_blank(),
       axis.ticks.y=element_blank()) +

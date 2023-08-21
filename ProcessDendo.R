@@ -46,7 +46,8 @@ process_dendrogram <- function(se, assay) {
   metadata <- cbind(as.data.frame(colData(se)),sample_name)
   metadata[] <- lapply(metadata, as.character)
   #This line of code is the reason for the NAs being introduced
-  dist_matrix <- stats::dist(dat, method = "euclidean")
+  suppressWarnings(dist_matrix <- stats::dist(dat, method = "euclidean"))
+  # dist_matrix <- stats::dist(dat, method = "euclidean")
   
   dendrogram <- stats::as.dendrogram(
     stats::hclust(
@@ -59,9 +60,10 @@ process_dendrogram <- function(se, assay) {
   dendrogram_ends <- dendrogram_segments %>%
     filter(yend == 0) %>%
     left_join(dendrogram_data$labels, by = "x") %>%
-    mutate(sample_name = label) %>%  # Use mutate instead of rename
-    select(-label) %>%               # Drop the original 'label' column
-    filter(!is.na(sample_name)) %>% # To remove NAs originated previously
+    # mutate(sample_name = label) %>%  # Use mutate instead of rename
+    # select(-label) %>%               # Drop the original 'label' column
+    dplyr::rename(sample_name = label) %>%
+    filter(!is.na(sample_name)) %>%
     left_join(metadata, by = "sample_name")
   
   return(list(dendrogram_ends=dendrogram_ends,

@@ -51,7 +51,12 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
               aes(x=x, y=y.y-1.5, label=dendrogram_ends[,category], 
                   color = dendrogram_ends[,category],
               hjust = "left"), check_overlap = TRUE, size = 2) +
-    scale_color_manual(values = category_color, name = category, guide_legend(override.aes = category_color, order = 2))  +
+    # scale_color_manual(values = category_color, name = category, guide_legend(override.aes = category_color, order = 2))  +
+    # scale_color_manual(values = category_color, name = category, guides(color = guide_legend(override.aes = aes(label = category_color))))  +
+    # guides(color = guide_legend(override.aes = aes(label = as.character(category_color), alpha = 1))) +
+    guides(color = guide_legend(override.aes = aes(label = "━", alpha = 1))) +
+    # guides(color = guide_legend(override.aes = aes(label = "—", alpha = 1))) +
+    scale_color_manual(values = category_color, name = category)  +
     scale_y_reverse(expand = c(0.2,0)) +
     coord_flip() + theme(
       axis.text.y=element_blank(),
@@ -61,4 +66,4 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   return(dendrogram)
 }
 
-# dendrogram_plotter(se, assay, batch_v = "batch", category = "sex")
+dendrogram_plotter(se, assay, batch_v = "batch", category = "condition")

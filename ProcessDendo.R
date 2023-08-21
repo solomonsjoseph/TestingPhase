@@ -1,6 +1,7 @@
 #All neccessary libraries loaded here
 library(tibble)
 library(dplyr)
+library(ggdendro)
 library(ggplot2)
 library(ggnewscale)
 

@@ -55,7 +55,9 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
     # scale_color_manual(values = category_color, name = category, guides(color = guide_legend(override.aes = aes(label = category_color))))  +
     # guides(color = guide_legend(override.aes = aes(label = as.character(category_color), alpha = 1))) +
     guides(color = guide_legend(override.aes = aes(label = "━", alpha = 1))) +
-    # guides(color = guide_legend(override.aes = aes(label = "—", alpha = 1))) +
+    # guides(color = guide_legend(override.aes = aes(label = "♦", alpha = 1))) +
+    # guides(color = guide_legend(override.aes = aes(label = "⸻", alpha = 1))) +
+    # guides(color = guide_legend(override.aes = aes(label = "➤", alpha = 1))) +
     scale_color_manual(values = category_color, name = category)  +
     scale_y_reverse(expand = c(0.2,0)) +
     coord_flip() + theme(

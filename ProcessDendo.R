@@ -3,29 +3,29 @@ library(ggplot2)
 library(ggnewscale)
 
 #Dataset
-se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
+# se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
 
-# ##### New Data added #####
-# se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
-# sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Male'
-# )
-# 
-# # Using accessor functions
-# colData(se)$sex <- sex
-# 
-# # Define 10 specific diseases
-# unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza",
-#                      "Ebola", "Zika", "Dengue", "Typhoid", "Measles")
-# 
-# # Repeating the diseases until we have a list of 89
-# diseases <- rep(unique_diseases, ceiling(89 / length(unique_diseases)))[1:89]
-# 
-# # Shuffle the diseases list to introduce randomness
-# random_diseases <- sample(diseases, length(diseases))
-# 
-# colData(se)$diseases <- random_diseases
-# 
-# ##### End of Data #####
+##### New Data added #####
+se <- readRDS("~/tmp/Projects/TestingPhase/signatureDataSE.RDS")
+sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Female', 'Female', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Male', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male', 'Male', 'Female', 'Female', 'Female', 'Female', 'Female', 'Male', 'Male', 'Male', 'Male', 'Female', 'Male', 'Female', 'Male', 'Male', 'Male', 'Female', 'Male', 'Male', 'Male'
+)
+
+# Using accessor functions
+colData(se)$sex <- sex
+
+# Define 10 specific diseases
+unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza",
+                     "Ebola", "Zika", "Dengue", "Typhoid", "Measles")
+
+# Repeating the diseases until we have a list of 89
+diseases <- rep(unique_diseases, ceiling(89 / length(unique_diseases)))[1:89]
+
+# Shuffle the diseases list to introduce randomness
+random_diseases <- sample(diseases, length(diseases))
+
+colData(se)$diseases <- random_diseases
+
+##### End of Data #####
 
 #Removes NAs if present in SE object
 se <- se[which(rownames(se) !="NA")]

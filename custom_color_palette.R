@@ -14,11 +14,21 @@ custom_color_palette <- function(col) {
   # palette_name <- ifelse(n < 5, "RdGnBu", "Paired") #Spectral was used first
   # get_palette <- grDevices::colorRampPalette(brewer.pal(n = n, name = palette_name))
   
-  get_palette <- function(n) {
-    hues = seq(15, 375, length = n + 1)
-    hcl(h = hues, l = 65, c = 100)[1:n]
-  }
+  # Determine color count and palette
+  color_count <- length(unique(unique_vars$.))
+  n <- length(unique(dendrogram_ends[,col]))
   
+  if (n<5) {
+    get_palette <- function(n) {
+      hues = seq(25, 375, length = n + 1)
+      hcl(h = hues, l = c(40, 65), c = 100)[1:n]
+    }
+    } else {
+    get_palette <- function(n) {
+      hues = seq(376, 1500, length = n + 1)
+      hcl(h = hues, l = c(35, 65), c = 100)[1:n]
+    }
+    }
   palette <- get_palette(color_count) %>%
     as.data.frame() %>%
     dplyr::rename("color" = ".") %>%
@@ -34,4 +44,8 @@ custom_color_palette <- function(col) {
   return(annotation_color)
 }
 
+<<<<<<< HEAD
 # custom_color_palette(col = "batch")
+=======
+custom_color_palette(col = "condition")
+>>>>>>> TestingPhase

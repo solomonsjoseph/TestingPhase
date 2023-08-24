@@ -8,7 +8,7 @@ source("custom_color_palette.R")
 
 dendrogram_plotter <- function(se, assay, annotation_column) {
   
-  dends <- process_dendrogram(se, assay, annotation_column)
+  dends <- process_dendrogram(se, assay)
   
   dendrogram_ends <- dends$dendrogram_ends
   
@@ -42,6 +42,10 @@ dendrogram_plotter <- function(se, assay, annotation_column) {
     geom_segment(data = dendrogram_ends,
                  aes(x=x, y=y.x, xend=xend, yend=yend, 
                      color = dendrogram_ends[,annotation_column])) +
+    geom_text(data = dendrogram_ends,
+                 aes(x=x, y=y.y, label=dendrogram_ends[,annotation_column],
+                     color = dendrogram_ends[,annotation_column]), 
+              check_overlap = TRUE, size = 2) +
     scale_color_manual(values = annotation_color, limits = names(annotation_color), name = as.character(annotation_column)) +
     scale_y_reverse() +
     coord_flip() + theme(

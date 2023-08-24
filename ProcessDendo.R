@@ -1,10 +1,7 @@
 #All neccessary libraries loaded here
-<<<<<<< HEAD
-=======
 library(tibble)
 library(dplyr)
 library(ggdendro)
->>>>>>> TestingPhase
 library(ggplot2)
 library(ggnewscale)
 library(geomtextpath)

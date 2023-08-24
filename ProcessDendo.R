@@ -4,6 +4,7 @@ library(dplyr)
 library(ggdendro)
 library(ggplot2)
 library(ggnewscale)
+library(geomtextpath)
 
 #Dataset
 # se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")

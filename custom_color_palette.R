@@ -44,8 +44,4 @@ custom_color_palette <- function(col) {
   return(annotation_color)
 }
 
-<<<<<<< HEAD
-# custom_color_palette(col = "batch")
-=======
-custom_color_palette(col = "condition")
->>>>>>> TestingPhase
+# custom_color_palette(col = "condition")

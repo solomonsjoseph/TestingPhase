@@ -1,5 +1,6 @@
 source("ProcessDendo.R")
 source("custom_color_palette.R")
+source("dendrogram_alpha_numeric_check.R")
 
 dendrogram_plotter <- function(se, assay, batch_v, category) {
   
@@ -30,45 +31,52 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   ##### ends here #####
   
   #Dendrogram color palette used | This code is moved to a different file
-  batch_color <- custom_color_palette(col = batch_v)
-  category_color <- custom_color_palette(col = category)
+  batch_color <- dendrogram_color_palette(col = batch_v, dendro = dendrogram_ends)
+  category_color <- dendrogram_color_palette(col = category, dendro = dendrogram_ends)
   
-  if (category == "condition" && is.numeric((category)))
-  {
-    # Get unique 'category' values, convert to dataframe with 'unique_string_index'.
-    unique_strings <- levels(factor(dendrogram_ends[,category])) %>%
-      as.data.frame() %>% rownames_to_column("unique_string_index")
-    
-    # Concatenate values from 'unique_strings' with "_" and store as a dataframe column 'category_val'.
-    label_category_strings <- paste(unlist(unique_strings[2]), sep = "") %>%
-      as.data.frame() %>% dplyr::rename("category_val" = ".")
-    
-    geom_label <- label_category_strings[,"category_val"]
-    
-  } else {
-    # Get unique 'category' values, convert to dataframe with 'unique_string_index'.
-    unique_strings <- levels(factor(dendrogram_ends[,category])) %>%
-      as.data.frame() %>% rownames_to_column("unique_string_index")
-    
-    # Concatenate values from 'unique_strings' with "_" and store as a dataframe column 'category_val'.
-    label_category_strings <- paste(unlist(unique_strings[1]), unlist(unique_strings[2]), sep = "_") %>%
-      as.data.frame() %>% dplyr::rename("category_val" = ".")
-    
-    geom_label <- label_category_strings[,"category_val"]
-  }
+  # numeric_or_alpha <- suppressWarnings(!is.na(as.numeric((levels(factor(dendrogram_ends[,category]))))))
+  # all_numeric <- TRUE
+  # 
+  # for (n in numeric_or_alpha){
+  #   if (n==FALSE){
+  #     all_numeric <- FALSE
+  #     break
+  #   }
+  # }
+  # 
+  # if (all_numeric)
+  # {
+  #   geom_label <- as.character(sort(as.numeric(levels(factor(dendrogram_ends[,category])))))
+  #   
+  # } else {
+  #   # Get unique 'category' values, convert to dataframe with 'unique_string_index'.
+  #   unique_strings <- levels(factor(dendrogram_ends[,category])) %>%
+  #     as.data.frame() %>% rownames_to_column("unique_string_index")
+  #   
+  #   # Concatenate values from 'unique_strings' with "_" and store as a dataframe column 'category_val'.
+  #   label_category_strings <- paste(unlist(unique_strings[1]), unlist(unique_strings[2]), sep = "_") %>%
+  #     as.data.frame() %>% dplyr::rename("category_val" = ".")
+  #   
+  #   geom_label <- label_category_strings[,"category_val"]
+  # }
+  
+  geom_label <- dendrogram_alpha_numeric_check(
+    dendro_category <- dendrogram_ends[,category])
   
   # #This line of code needs to be modified to fix the y=y.y issue [This line is introduced]
   # buffer <- -1
   # for (dendro in levels(factor(dendrogram_ends[,category]))) {
-  #   if (length(dendro) > buffer) {
-  #     buffer <- length(dendro)
+  #   if (nchar(dendro) > buffer) {
+  #     buffer <- nchar(dendro)
   #     buffer_string <- dendro
   #   }
   # }
-  # 
-  # buffer <- length(buffer_string)
-  # 
-  # # buffer <- buffer * -1.15
+  # if (suppressWarnings(is.na(as.numeric(buffer_string)) == TRUE)){
+  #   buffer <- (length(dendrogram_ends[,category]) * -0.04)
+  # }
+  # else{
+  #   buffer <- buffer * (length(dendrogram_ends[,category]) * -0.04)
+  # }
   # # buffer <- buffer + (length(dendrogram_ends[,category]) * -0.04)
   
   # Create dendrogram plot
@@ -85,17 +93,18 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
               #Minor bug with adding y=y.y-1.5
               # aes(x=x, y=y.y-1.5, label=dendrogram_ends[,category],
               # aes(x=x, y=y.y+buffer, label=dendrogram_ends[,category],
-              aes(x=x, y=y.y-2.5, label=as.character(
+              aes(x=x, y=y.y-1.5, label=as.character(
                 as.numeric(factor(dendrogram_ends[,category]))),
                 color = dendrogram_ends[,category]), 
-              check_overlap = TRUE, size = 2) +
+              check_overlap = TRUE, size = 2.2) +
     # scale_color_manual(values = category_color, name = category, guide_legend(override.aes = category_color, order = 2))  +
     # scale_color_manual(values = category_color, name = category, guides(color = guide_legend(override.aes = aes(label = category_color))))  +
     # guides(color = guide_legend(override.aes = aes(label = as.character(category_color), alpha = 1))) +
     # guides(color = guide_legend(override.aes = aes(label = "♦", alpha = 1))) +
     # guides(color = guide_legend(override.aes = aes(label = "⸻", alpha = 1))) +
     # guides(color = guide_legend(override.aes = aes(label = "➤", alpha = 1))) +
-    guides(color = guide_legend(override.aes = list(label = "━", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
+    # guides(color = guide_legend(override.aes = list(label = "━", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
+    guides(color = guide_legend(override.aes = list(label = "#", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
     # guides(color = guide_legend(override.aes = aes(label = label_category_string, alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
     scale_color_manual(labels = geom_label, values = category_color, name = category)  +
     scale_y_reverse(expand = c(0.2,0)) +

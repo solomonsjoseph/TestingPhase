@@ -1,32 +1,29 @@
-source("ProcessDendo.R")
-custom_color_palette <- function(col) {
-  
-  dend <- process_dendrogram(se, assay)
-  dendrogram_ends <- dend$dendrogram_ends
+library(tibble)
+dendrogram_color_palette <- function(col, dendro) {
   
   # Create unique_vars dataframe
-  unique_vars <- levels(factor(dendrogram_ends[,col])) %>%
+  unique_vars <- levels(factor(dendro[,col])) %>%
     as.data.frame() %>% rownames_to_column("row_id")
   
   # Determine color count and palette
   color_count <- length(unique(unique_vars$.))
-  n <- length(unique(dendrogram_ends[,col]))
+  n <- length(unique(dendro[,col]))
   # palette_name <- ifelse(n < 5, "RdGnBu", "Paired") #Spectral was used first
   # get_palette <- grDevices::colorRampPalette(brewer.pal(n = n, name = palette_name))
   
   # Determine color count and palette
   color_count <- length(unique(unique_vars$.))
-  n <- length(unique(dendrogram_ends[,col]))
+  n <- length(unique(dendro[,col]))
   
   if (n<5) {
     get_palette <- function(n) {
-      hues = seq(25, 375, length = n + 1)
-      hcl(h = hues, l = c(40, 65), c = 100)[1:n]
+      hues <- seq(25, 375, length = n + 1)
+      grDevices::hcl(h = hues, l = c(40, 65), c = 100)[seq_len(n)]
     }
     } else {
     get_palette <- function(n) {
-      hues = seq(376, 1500, length = n + 1)
-      hcl(h = hues, l = c(35, 65), c = 100)[1:n]
+      hues <- seq(376, 1500, length = n + 1)
+      grDevices::hcl(h = hues, l = c(35, 65), c = 100)[seq_len(n)]
     }
     }
   palette <- get_palette(color_count) %>%
@@ -39,9 +36,9 @@ custom_color_palette <- function(col) {
     select(-row_id)
   
   # Create a named vector for annotation_color
-  annotation_color <- setNames(color_list$color, color_list$.)
+  annotation_color <- stats::setNames(color_list$color, color_list$.)
   
   return(annotation_color)
 }
 
-# custom_color_palette(col = "condition")
+# dendrogram_color_palette(col = "condition")

@@ -1,10 +1,9 @@
 #All neccessary libraries loaded here
-library(tibble)
 library(dplyr)
 library(ggdendro)
 library(ggplot2)
 library(ggnewscale)
-library(geomtextpath)
+# library(geomtextpath)
 
 #Dataset
 # se <- readRDS("~/tmp/Projects/TestingPhase/bladderbatchSE.RDS")
@@ -15,7 +14,7 @@ sex <- c('Male', 'Female', 'Male', 'Female', 'Female', 'Male', 'Female', 'Male',
 )
 
 # Using accessor functions
-colData(se)$sex <- sex
+# colData(se)$sex <- sex
 
 # Define 10 specific diseases
 unique_diseases <- c("HIV", "Cholera", "Tuberculosis", "Malaria", "Influenza",

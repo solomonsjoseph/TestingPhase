@@ -1,3 +1,14 @@
+#' Dendrogram alpha or numeric checker
+#'
+#' This function checks if there is any numeric or strings for plotting legend
+#' @param dendro_category column from dendrogram object representing category
+#' @import tibble
+#' @import ggdendro
+#' @import dplyr
+#' @return geom_label label for the legend of category variable
+#'
+#' @export
+#'
 dendrogram_alpha_numeric_check <- function(dendro_category) {
   numeric_or_alpha <- !is.na(suppressWarnings(as.numeric((levels(
     factor(dendro_category))))))

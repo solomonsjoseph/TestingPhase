@@ -48,9 +48,10 @@ process_dendrogram <- function(se, assay) {
   sample_name <- dat$sample_name
   metadata <- cbind(as.data.frame(colData(se)),sample_name)
   metadata[] <- lapply(metadata, as.character)
+  dat <- dat %>% select(-c(sample_name))
   #This line of code is the reason for the NAs being introduced
-  suppressWarnings(dist_matrix <- stats::dist(dat, method = "euclidean"))
-  # dist_matrix <- stats::dist(dat, method = "euclidean")
+  # suppressWarnings(dist_matrix <- stats::dist(dat, method = "euclidean"))
+  dist_matrix <- stats::dist(dat, method = "euclidean")
   
   dendrogram <- stats::as.dendrogram(
     stats::hclust(
@@ -74,4 +75,4 @@ process_dendrogram <- function(se, assay) {
   
 }
 
-#process_dendrogram(se, assay)
+process_dendrogram(se, assay)

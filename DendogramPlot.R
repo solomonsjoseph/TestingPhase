@@ -61,7 +61,7 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   # }
   
   geom_label <- dendrogram_alpha_numeric_check(
-    dendro_category <- dendrogram_ends[,category])
+    dendro_category = dendrogram_ends[,category])
   
   # #This line of code needs to be modified to fix the y=y.y issue [This line is introduced]
   # buffer <- -1
@@ -103,8 +103,8 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
     # guides(color = guide_legend(override.aes = aes(label = "♦", alpha = 1))) +
     # guides(color = guide_legend(override.aes = aes(label = "⸻", alpha = 1))) +
     # guides(color = guide_legend(override.aes = aes(label = "➤", alpha = 1))) +
-    # guides(color = guide_legend(override.aes = list(label = "━", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
-    guides(color = guide_legend(override.aes = list(label = "#", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
+    guides(color = guide_legend(override.aes = list(label = "\u2014", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
+    # guides(color = guide_legend(override.aes = list(label = "#", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
     # guides(color = guide_legend(override.aes = aes(label = label_category_string, alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
     scale_color_manual(labels = geom_label, values = category_color, name = category)  +
     scale_y_reverse(expand = c(0.2,0)) +
@@ -116,5 +116,5 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   return(dendrogram)
 }
 
-dendrogram_plotter(se, assay, batch_v = "batch", category = "condition")
+dendrogram_plotter(se, assay, batch_v = "batch", category = "diseases")
 

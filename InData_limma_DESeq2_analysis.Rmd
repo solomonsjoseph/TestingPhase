@@ -1,0 +1,192 @@
+---
+title: "Differential Expression Analysis of Indian Dataset"
+author: "Solomon"
+date: "2023-11-09"
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    theme: "flatly"
+editor_options:
+  chunk_output_type: console
+---
+
+## Indian dataset
+
+We are going to use this dataset as an example to test the working of the 
+methods "DESeq2" & "limma"
+
+```{r setup, include=FALSE}
+library(SummarizedExperiment)
+se <- readRDS("~/Downloads/indata.rds")
+```
+
+## Data processing
+
+```{r setup, include=FALSE}
+conditions <- c("Tb_status", "bmi_cat3")
+batch <- "batch"
+```
+
+## Plotting for each assay {.tabset}
+
+### Counts
+```{r setup}
+assay_to_analyze <- "counts"
+
+batch <- "batch"
+conditions <- c("Tb_status", "bmi_cat2", "BMI")
+
+assay_dat <- assays(se)[[assay_to_analyze]] # Change the data to dat
+rownames(assay_dat) <- names(se)
+analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
+
+lim <- limma_method_DE(assay_dat, analysis_design, batch, conditions)
+```
+
+## Limma processing
+
+```{r setup, include=FALSE}
+# # Define the design matrix
+# design_mod <- model.matrix(stats::as.formula(
+#     paste(
+#         " ~ ",
+#         paste(colnames(analysis_design),
+#               collapse = "+"
+#         )
+#     )
+# ), data = analysis_design)
+
+library(limma)
+
+# make a new variable, bmi_cat3, that has three levels (low, avg, high bmi)
+bmi_cat3 <- rep("avg", ncol(se))
+bmi_cat3[colData(se)$BMI < 18.5] <- "low"
+bmi_cat3[colData(se)$BMI > 25] <- "high"
+colData(se)$bmi_cat3 <- as.factor(bmi_cat3)
+
+# get data matrix
+dat_logcpm <- assay(se, "log_counts_cpm") # For limma
+
+# build formula:
+mod_formula <- as.formula(paste0(" ~ ", batch, " + ", paste(conditions, collapse = " + ")))
+des <- model.matrix(mod_formula, data = colData(se))
+colnames(des)[1] <- "Intercept"
+
+# Fit the linear model
+fit <- lmFit(dat_logcpm, design = des)
+
+# contrasts for batch
+contrasts <- list(levels=des)
+contrasts <- append(contrasts, paste(batch, levels(colData(se)[, batch])[-1], sep = "", collapse = " + "))
+
+# contrasts for conditions
+for (con in conditions){contrasts <- append(contrasts,paste(con, levels(colData(se)[, con])[-1], sep = "", collapse = " + "))}
+
+# Create the contrast matrix
+contrast.matrix <- makeContrasts(contrasts=unlist(contrasts[-1]), levels=des)
+
+# do.call(makeContrasts, myargs)
+fit <- contrasts.fit(fit, contrast.matrix)
+
+# Apply empirical Bayes moderation to the standard errors
+fit2 <- eBayes(fit)
+
+# Extract top differentially expressed genes
+lim <- topTable(fit2, number = Inf)
+
+lim1 <- topTable(fit2, coef = 1)
+lim2 <- topTable(fit2, coef = 2, number = Inf)
+lim3 <- topTable(fit2, coef = 3)
+
+# Filter genes with adjusted p-value < 0.05 for specified column
+topGenes_limma <- subset(lim2, adj.P.Val < 0.05) # Significant gene
+topGenes_limma
+```
+
+## DESeq2 processing
+
+```{r setup, include=FALSE}
+library(DESeq2) # to the top
+
+data <- assays(se)[["counts"]] # For DESeq2
+rownames(data) <- names(se)
+
+analysis_design <- as.data.frame(colData(se)[c(conditions, batch)])
+colnames(data) <- rownames(analysis_design)
+  data[is.na(data)] <- 0
+
+if (any(!data %in% 0:max(data)) || any(data < 0)) {
+      stop("Error: The data does contains negative integer counts.")
+    }
+    dds <- DESeqDataSetFromMatrix(
+      countData = data,
+      colData = analysis_design,
+      design = stats::as.formula(
+        paste(
+          " ~ ",
+          paste(colnames(analysis_design),
+            collapse = "+"
+          )
+        )
+      )
+    )
+    dds <- DESeq(dds)
+    dds
+```
+
+
+## TopGenes
+### DESeq2
+
+```{r setup, include=FALSE}
+perform_analysis_deseq2 <- function(dds, column_name) {
+
+  # Get unique levels of the specified column
+  levels <- levels(colData(dds)[[column_name]])
+  
+  # Check for at least two levels
+  if (length(levels) < 2) {
+    stop("There must be at least two levels in the specified column for differential expression analysis.")
+  }
+  
+  # Get results for specified column
+  res <- results(dds, contrast=c(column_name, levels[1], levels[2]))
+  
+  # Filter genes with adjusted p-value < 0.05 for specified column
+  topGenes <- subset(res, padj < 0.05)
+  
+  return(topGenes)
+}
+
+# Usage
+topGenes_deseq2 <- perform_analysis_deseq2(dds = dds, column_name = "Tb_status")
+topGenes_deseq2
+
+```
+
+## Venn Diagram representation for the Top genes
+
+Here, I have taken the output of the top genes which have padj value less than 0.05 and plotted a venn diagram representing the genes which might be sharing common space with DESeq2 & limma
+
+```{r setup, include=FALSE}
+library(ggvenn)
+
+# Extract the list of genes from the DESeq2 results table
+genes_deseq2 <- rownames(topGenes_deseq2)
+
+# Extract the list of genes from the Limma results table
+genes_limma <- rownames(topGenes_limma)
+
+# one element for DESeq2 and another for Limma
+gene_sets <- list(
+  DESeq2 = genes_deseq2,
+  Limma = genes_limma
+)
+
+# Create and view the Venn diagram
+venn_plot <- ggvenn(gene_sets)
+print(venn_plot)
+
+```

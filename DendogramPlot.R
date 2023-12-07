@@ -60,8 +60,11 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
   #   geom_label <- label_category_strings[,"category_val"]
   # }
   
-  geom_label <- dendrogram_alpha_numeric_check(
-    dendro_category = dendrogram_ends[,category])
+  geom_label_batch <- dendrogram_alpha_numeric_check(
+    dendro_var = dendrogram_ends[, batch_var])
+  
+  geom_label_category <- dendrogram_alpha_numeric_check(
+    dendro_var = dendrogram_ends[, category_var])
   
   # #This line of code needs to be modified to fix the y=y.y issue [This line is introduced]
   # buffer <- -1
@@ -87,7 +90,9 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
                  aes(x=x, y=y.x, xend=xend, yend=yend, 
                      color = dendrogram_ends[,batch_v]
                  )) +
-    scale_color_manual(values = batch_color, name = batch_v, guide_legend(override.aes = batch_color, order = 1)) +
+    scale_color_manual(labels = geom_label_batch, values = batch_color, name = batch_var,
+                       guide_legend(override.aes = batch_color,
+                                    order = 1)) +
     new_scale_color() + # To separate the color palette
     geom_text(data = dendrogram_ends,
               #Minor bug with adding y=y.y-1.5
@@ -106,7 +111,7 @@ dendrogram_plotter <- function(se, assay, batch_v, category) {
     guides(color = guide_legend(override.aes = list(label = "\u2014", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
     # guides(color = guide_legend(override.aes = list(label = "#", alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
     # guides(color = guide_legend(override.aes = aes(label = label_category_string, alpha = 1))) + # This line directs geom_text with the right color palette | Fixes "a" in legend issue
-    scale_color_manual(labels = geom_label, values = category_color, name = category)  +
+    scale_color_manual(labels = geom_label_category, values = category_color, name = category)  +
     scale_y_reverse(expand = c(0.2,0)) +
     coord_flip() + theme(
       axis.text.y=element_blank(),

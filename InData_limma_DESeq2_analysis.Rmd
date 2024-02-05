@@ -19,7 +19,7 @@ methods "DESeq2" & "limma"
 
 ```{r setup, include=FALSE}
 library(SummarizedExperiment)
-se <- readRDS("~/Downloads/indata.rds")
+se <- readRDS("~/tmp/Projects/TestingPhase/indata.rds")
 ```
 
 ## Data processing

@@ -1,0 +1,63 @@
+---
+title: "Comparative Report on SVA and RUV"
+author: "Solomon"
+date: "`r Sys.Date()`"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Comparative Report on Surrogate Variable Analysis (SVA) and Removing Unwanted Variability (RUV)
+
+## Introduction
+
+In the realm of high-throughput genomic data analysis, two prominent methodologies, Surrogate Variable Analysis (SVA) and Removing Unwanted Variability (RUV), are extensively employed. Both methods aim to rectify a common issue in genomic studies: the presence of unwanted variation. This report delineates the definitions, similarities, differences, and provides examples for each method.
+
+## Definitions
+
+### Surrogate Variable Analysis (SVA)
+
+SVA is a statistical technique used in genomic data analysis to identify and adjust for latent or unobserved sources of variation within high-dimensional data sets. These variations often arise from non-biological factors like batch effects, sample handling discrepancies, or other technical variables.
+
+### Removing Unwanted Variability (RUV)
+
+RUV, specifically designed for RNA-Seq data analysis, is a set of methods aimed at identifying and correcting for unwanted variation that can impact differential expression analysis. RUV methods are tailored to address specific types of unwanted variation using control genes, replicate samples, or residuals.
+
+## Similarities
+
+- **Objective**: Both SVA and RUV are developed to address unwanted variation in high-throughput biological data.
+- **Application Area**: They are predominantly used in genomic research, especially in studies involving large-scale gene expression data.
+- **Improvement of Data Quality**: Both methodologies enhance the reliability and validity of the results by mitigating the effects of extraneous variables.
+
+## Differences
+
+### Methodological Approach
+
+- **SVA**: Identifies surrogate variables that represent the effects of unmeasured confounders. It is a more generalized approach applicable across various high-dimensional datasets.
+- **RUV**: Offers specific methods (RUVg, RUVs, RUVr) for RNA-Seq data, focusing on removing unwanted variation directly integrated into the differential expression analysis.
+
+### Scope of Application
+
+- **SVA**: Broadly applicable to various high-dimensional genomic datasets, including microarray and RNA-Seq.
+- **RUV**: Specifically tailored for RNA-Seq data analysis.
+
+### Implementation
+
+<!-- - **SVA**: Constructs surrogate variables for unobserved confounding factors. -->
+- **RUV**: Utilizes known control genes, replicate samples, or residuals for correcting unwanted variation.
+
+## Examples
+
+### SVA Example
+
+In a microarray experiment across multiple labs, each lab's specific handling and processing techniques could introduce systematic variation. SVA would identify surrogate variables representing these lab-specific effects. These variables would then be used in further analyses to correct for these lab-specific biases, focusing the analysis on biological differences.
+
+### RUV Example
+
+Consider an RNA-Seq study evaluating the effects of a new drug. If the RNA extraction and sequencing processes differ between batches, this can introduce batch effects. RUVg would use a set of control genes (e.g., housekeeping genes) to adjust for these batch effects, ensuring that the observed gene expression changes are attributed to the drug and not to technical variations.
+
+## Conclusion
+
+While both SVA and RUV address the critical issue of unwanted variation in genomic data analysis, their approaches and specific applications differ significantly. SVA offers a more generalized solution across various genomic data types, while RUV provides targeted methods for RNA-Seq data, ensuring the accuracy of differential expression analysis. Understanding the nuances of each method is crucial for researchers to choose the appropriate technique based on their specific data type and analysis needs.

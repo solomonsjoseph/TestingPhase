@@ -1,0 +1,105 @@
+#MetaScope Testing
+##Installation & Including Required Libraries
+```{r}
+
+if (!requireNamespace("devtools", quietly = TRUE))
+  install.packages("devtools")
+devtools::install_github("wejlab/MetaScope")
+
+```
+
+##Supressing Warning Messages and Including NCBI key for Ref data 
+```{r}
+
+suppressPackageStartupMessages({
+  library(MetaScope)
+  library(magrittr)
+  library(Biostrings)
+})
+NCBI_key <- "01d22876be34df5c28f4aedc479a2674c809"
+options("ENTREZ_KEY" = NCBI_key)
+
+```
+
+##Downloadiing Target Genomes
+```{r}
+
+target_ref_temp <- tempfile()
+dir.create(target_ref_temp)
+
+all_species <- c("Staphylococcus aureus RF122",
+                 "Staphylococcus aureus subsp. aureus ST398",
+                 "Staphylococcus aureus subsp. aureus Mu3")
+sapply(all_species, download_refseq, 
+       reference = FALSE, representative = FALSE, compress = TRUE,
+       out_dir = target_ref_temp, caching = TRUE)
+
+```
+
+##Downloading Filter Genomes
+```{r}
+
+filter_ref_temp <- tempfile()
+dir.create(filter_ref_temp)
+
+download_refseq(
+  taxon = "Staphylococcus epidermidis RP62A",
+  representative = FALSE, reference = FALSE,
+  compress = TRUE, out_dir = filter_ref_temp,
+  caching = TRUE)
+
+```
+
+##DeMultiplexing
+```{r}
+
+# Get barcode, index, and read data locations
+barcodePath <-
+  system.file("extdata", "barcodes.txt", package = "MetaScope")
+indexPath <- system.file("extdata", "virus_example_index.fastq",
+                         package = "MetaScope")
+readPath <-
+  system.file("extdata", "virus_example.fastq", package = "MetaScope")
+
+# Get barcode, index, and read data locations
+demult <-
+  demultiplex(barcodePath,
+              indexPath,
+              readPath,
+              rcBarcodes = FALSE,
+              hammingDist = 2,
+              location = tempfile())
+
+demult
+
+```
+
+##Alignment with Reference Library
+###For Target
+```{r}
+
+# ## Create temp directory to store the Bowtie2 indices
+# index_temp <- tempfile()
+# dir.create(index_temp)
+
+# Create target index
+mk_bowtie_index(
+  ref_dir = "~/Downloads/Genome/Target_genome/",
+  lib_dir = "~/Downloads//Genome/Target_genome/",
+  lib_name = "target",
+  overwrite = TRUE
+)
+
+```
+###For Filter
+```{r}
+
+# Create filter index
+mk_bowtie_index(
+  ref_dir = "~/Downloads/Genome/Filter_genome/",
+  lib_dir = "~/Downloads/Genome/Filter_genome/",
+  lib_name = "filter",
+  overwrite = TRUE
+)
+
+```
